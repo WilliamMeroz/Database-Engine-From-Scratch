@@ -3,4 +3,4 @@ project(Database_Engine_From_Scratch)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Database_Engine_From_Scratch main.cpp)
+add_executable(Database_Engine_From_Scratch src/main.cpp)
