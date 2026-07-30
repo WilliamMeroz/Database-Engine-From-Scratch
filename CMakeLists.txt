@@ -9,4 +9,6 @@ add_executable(Database_Engine_From_Scratch src/main.cpp
         include/InputBuffer.h
         src/InputBuffer.cpp
         include/StatementType.h
+        include/Row.h
+        src/Row.cpp
 )

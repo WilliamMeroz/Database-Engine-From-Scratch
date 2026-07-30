@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "../include/InputBuffer.h"
 #include "../include/Statement.h"
 
@@ -9,7 +10,8 @@ enum MetaCommandResult {
 
 enum PrepareResult {
     PREPARE_SUCCESS,
-    PREPARE_UNRECOGNIZED_STATEMENT
+    PREPARE_UNRECOGNIZED_STATEMENT,
+    PREPARE_SYNTAX_ERROR
 };
 
 void print_prompt() {
@@ -32,12 +34,28 @@ MetaCommandResult do_meta_command(InputBuffer* input_buffer) {
 }
 
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
-    if (input_buffer->buffer == "insert") {
+    std::istringstream ss(input_buffer->buffer);
+    std::string keyword;
+    ss >> keyword;
+    if (keyword == "insert") {
         statement->type = StatementType::STATEMENT_INSERT;
+
+        int id;
+        std::string username, email;
+        ss >> id >> username >> email;
+
+        if (ss.fail()) {
+            return PREPARE_SYNTAX_ERROR;
+        }
+
+        statement->row_to_insert.id = id;
+        memcpy(&statement->row_to_insert.username, username.c_str(), statement->row_to_insert.username.size());
+        memcpy(&statement->row_to_insert.email, email.c_str(), statement->row_to_insert.email.size());
+
         return PREPARE_SUCCESS;
     }
 
-    if (input_buffer->buffer == "select") {
+    if (keyword == "select") {
         statement->type = StatementType::STATEMENT_SELECT;
         return PREPARE_SUCCESS;
     }
