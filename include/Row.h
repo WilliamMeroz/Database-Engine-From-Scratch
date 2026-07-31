@@ -18,6 +18,10 @@ public:
     void serialize_row(Row* source, char* destination);
     void deserialize_row(char* source, Row* destination);
 
+    constexpr static uint16_t get_row_size() {
+        return ROW_SIZE;
+    }
+
 private:
     static constexpr uint16_t ID_SIZE = sizeof(id);
     static constexpr uint16_t USERNAME_SIZE = sizeof(username);
