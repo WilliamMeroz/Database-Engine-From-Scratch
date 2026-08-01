@@ -4,29 +4,24 @@
 
 #ifndef DATABASE_ENGINE_FROM_SCRATCH_TABLE_H
 #define DATABASE_ENGINE_FROM_SCRATCH_TABLE_H
+#include <memory>
+#include <array>
 #include "Row.h"
 // Table that points to specific rows in specific pages.
 class Table {
-    static constexpr uint32_t PAGE_SIZE = 4096;
-    static constexpr uint32_t TABLE_MAX_PAGE = 100;
-    static constexpr uint32_t ROWS_PER_PAGE = PAGE_SIZE / Row::get_row_size();
-    static constexpr uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGE;
+    static constexpr int PAGE_SIZE = 4096;
+    static constexpr int TABLE_MAX_PAGES = 100;
+    static constexpr int ROWS_PER_PAGE = PAGE_SIZE / Row::get_row_size();
+    static constexpr int TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
 public:
-    uint32_t num_rows = 0;
-    char* pages[TABLE_MAX_PAGE];
+    int num_rows = 0;
+    std::array<std::unique_ptr<char[]>, TABLE_MAX_PAGES> pages{};
 
-    static char* row_slot(Table* table, uint32_t row_num) {
-        const uint32_t page_num = row_num / ROWS_PER_PAGE;
-        char* page = table->pages[page_num];
-        if (page == nullptr) {
-            page = table->pages[page_num] = new char[PAGE_SIZE]; // Allocate memory for that page, could be byte too.
-        }
+    char* row_slot(int row_number);
 
-        uint32_t row_offset = row_num % ROWS_PER_PAGE; // Offset is the exact location (row number) of the row in the page.
-        uint32_t byte_offset = row_offset * Row::get_row_size(); // Byte offset is just the exact byte location
-        return page + byte_offset; // Return that location (page (current location) + offset). Pointer arithmetic
-    }
+    static constexpr int getTableMaxRows() { return TABLE_MAX_ROWS; }
+    static constexpr int getTableMaxPages() { return TABLE_MAX_PAGES; }
 };
 
 #endif //DATABASE_ENGINE_FROM_SCRATCH_TABLE_H
