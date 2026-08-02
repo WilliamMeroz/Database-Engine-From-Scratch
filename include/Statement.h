@@ -7,7 +7,7 @@
 class Statement {
 public:
     StatementType type;
-    Row row_to_insert;
+    db::Row row_to_insert;
 };
 
 #endif //DATABASE_ENGINE_FROM_SCRATCH_STATEMENT_H
