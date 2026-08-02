@@ -9,6 +9,6 @@ char* Table::row_slot(const int row_number) {
     }
 
     const int row_offset = row_number % ROWS_PER_PAGE; // Offset is the exact location (row number) of the row in the page.
-    const int byte_offset = row_offset * Row::get_row_size(); // Byte offset is just the exact byte location
+    const int byte_offset = row_offset * db::Row::get_row_size(); // Byte offset is just the exact byte location
     return page.get() + byte_offset; // Return that location (page (current location) + offset). Pointer arithmetic
 }

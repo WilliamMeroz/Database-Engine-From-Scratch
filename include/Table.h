@@ -11,7 +11,7 @@
 class Table {
     static constexpr int PAGE_SIZE = 4096;
     static constexpr int TABLE_MAX_PAGES = 100;
-    static constexpr int ROWS_PER_PAGE = PAGE_SIZE / Row::get_row_size();
+    static constexpr int ROWS_PER_PAGE = PAGE_SIZE / db::Row::get_row_size();
     static constexpr int TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
 public:
