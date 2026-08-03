@@ -22,4 +22,5 @@ add_executable(Database_Engine_From_Scratch src/main.cpp
         src/Pager.cpp
         include/Pager.h
         include/Cursor.h
+        src/Cursor.cpp
 )
