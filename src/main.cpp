@@ -35,8 +35,9 @@ namespace {
         }
     }
 
-    MetaCommandResult do_meta_command(const InputBuffer* input_buffer) {
+    MetaCommandResult do_meta_command(const InputBuffer* input_buffer, const Table* table) {
         if (input_buffer->buffer == ".exit") {
+            table->db_close();
             exit(EXIT_SUCCESS);
         }
 
@@ -115,15 +116,20 @@ namespace {
         return ExecuteResult{};
     }
 }
-int main() {
-    Table table;
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        std::cerr << "You must supply a database name" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    char* db_name = argv[1];
+    Table table(db_name);
     InputBuffer input;
     while (true) {
         print_prompt();
         read_input(input);
 
         if (!input.buffer.empty() && input.buffer.at(0) == '.') {
-            switch (do_meta_command(&input)) {
+            switch (do_meta_command(&input, &table)) {
                 case META_COMMAND_SUCCESS: continue;
 
                 case META_COMMAND_UNRECOGNIZED_COMMAND:

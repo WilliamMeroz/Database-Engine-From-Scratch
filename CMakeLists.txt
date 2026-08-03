@@ -19,4 +19,6 @@ add_executable(Database_Engine_From_Scratch src/main.cpp
         src/Row.cpp
         include/Table.h
         src/Table.cpp
+        src/Pager.cpp
+        include/Pager.h
 )

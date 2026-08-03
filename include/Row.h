@@ -7,8 +7,8 @@
 #include <array>
 
 namespace db {
-    constexpr int COLUMN_USERNAME_SIZE = 32;
-    constexpr int COLUMN_EMAIL_SIZE = 255;
+    constexpr uint32_t COLUMN_USERNAME_SIZE = 32;
+    constexpr uint32_t COLUMN_EMAIL_SIZE = 255;
 
     class Row {
     public:
@@ -19,19 +19,19 @@ namespace db {
         void serialize_row(char* destination) const;
         void deserialize_row(const char* source);
 
-        constexpr static int get_row_size() {
+        constexpr static uint32_t get_row_size() {
             return ROW_SIZE;
         }
 
         friend std::ostream& operator<<(std::ostream& os, const Row& row);
     private:
-        static constexpr int ID_SIZE = sizeof(id);
-        static constexpr int USERNAME_SIZE = sizeof(username);
-        static constexpr int EMAIL_SIZE = sizeof(email);
-        static constexpr int ID_OFFSET = 0;
-        static constexpr int USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
-        static constexpr int EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
-        static constexpr int ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
+        static constexpr uint32_t ID_SIZE = sizeof(id);
+        static constexpr uint32_t USERNAME_SIZE = sizeof(username);
+        static constexpr uint32_t EMAIL_SIZE = sizeof(email);
+        static constexpr uint32_t ID_OFFSET = 0;
+        static constexpr uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
+        static constexpr uint32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
+        static constexpr uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
     };
 }
