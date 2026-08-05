@@ -1,13 +1,12 @@
 #ifndef DATABASE_ENGINE_FROM_SCRATCH_STATEMENT_H
 #define DATABASE_ENGINE_FROM_SCRATCH_STATEMENT_H
 
-#include "Row.h"
-#include "StatementType.h"
-
-class Statement {
+#include "row.h"
+enum class StatementType { STATEMENT_INSERT, STATEMENT_SELECT };
+class statement {
 public:
     StatementType type;
-    db::Row row_to_insert;
+    db::row row_to_insert;
 };
 
 #endif //DATABASE_ENGINE_FROM_SCRATCH_STATEMENT_H

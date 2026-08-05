@@ -11,16 +11,16 @@ namespace db {
     static constexpr int TABLE_MAX_PAGES = 100;
     static constexpr int PAGE_SIZE = 4096;
 
-    class Pager {
+    class pager {
         std::fstream file_descriptor;
         uint32_t file_length = 0;
         std::array<std::unique_ptr<char[]>, TABLE_MAX_PAGES> pages{};
 
         public:
-            explicit Pager(std::string& filename);
-            ~Pager();
-            Pager(const Pager&) = delete;
-            Pager& operator =(const Pager&) = delete;
+            explicit pager(std::string& filename);
+            ~pager();
+            pager(const pager&) = delete;
+            pager& operator =(const pager&) = delete;
 
             char* get_page(int page_number);
             const std::unique_ptr<char[]>& get_page_ptr(int page_number) const;

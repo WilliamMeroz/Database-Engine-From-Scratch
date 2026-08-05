@@ -10,17 +10,18 @@ FetchContent_Declare(
 )
 
 add_executable(Database_Engine_From_Scratch src/main.cpp
-        include/Statement.h
-        src/Statement.cpp
-        include/InputBuffer.h
-        src/InputBuffer.cpp
-        include/StatementType.h
-        include/Row.h
-        src/Row.cpp
-        include/Table.h
-        src/Table.cpp
-        src/Pager.cpp
-        include/Pager.h
-        include/Cursor.h
-        src/Cursor.cpp
+        include/model/Statement.h
+        src/model/Statement.cpp
+        include/repl/InputBuffer.h
+        src/repl/InputBuffer.cpp
+        include/model/Row.h
+        src/model/Row.cpp
+        include/storage/Table.h
+        src/storage/Table.cpp
+        src/storage/pager.cpp
+        include/storage/pager.h
+        include/storage/Cursor.h
+        src/storage/Cursor.cpp
+        include/storage/BPlusTree.h
+        src/storage/BPlusTree.cpp
 )
