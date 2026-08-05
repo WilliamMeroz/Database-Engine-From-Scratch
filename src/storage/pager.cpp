@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 namespace db {
-    pager::pager(std::string& filename) {
+    Pager::Pager(std::string& filename) {
        file_descriptor.open(filename, std::ios::in | std::ios::out | std::ios::binary);
 
         // Attempt to open existing file failed (in | out) so we create a new file
@@ -33,11 +33,11 @@ namespace db {
         file_length = static_cast<uint32_t>(length);
     }
 
-    pager::~pager() {
+    Pager::~Pager() {
         file_descriptor.close();
     }
 
-    char* pager::get_page(const int page_number) {
+    char* Pager::get_page(const int page_number) {
         file_descriptor.clear();
 
         if (file_descriptor.bad()) {
@@ -76,11 +76,11 @@ namespace db {
         return pages[page_number].get();
     }
 
-    uint32_t pager::get_file_length() const {
+    uint32_t Pager::get_file_length() const {
         return file_length;
     }
 
-    void pager::close_file() {
+    void Pager::close_file() {
         file_descriptor.flush();
         file_descriptor.close();
         if (file_descriptor.fail()) {
@@ -89,15 +89,15 @@ namespace db {
         }
     }
 
-    const std::unique_ptr<char[]> &pager::get_page_ptr(int page_number) const {
+    const std::unique_ptr<char[]> &Pager::get_page_ptr(int page_number) const {
         return pages[page_number];
     }
 
-    void pager::release_page_ptr(int page_number) {
+    void Pager::release_page_ptr(int page_number) {
         pages[page_number] = nullptr;
     }
 
-    void pager::flush(int page_number, int size) {
+    void Pager::flush(int page_number, int size) {
         file_descriptor.clear();
         if (pages[page_number] == nullptr) {
             std::cout << "Tried to flush a page out of bounds" << std::endl;

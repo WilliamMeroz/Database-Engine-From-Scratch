@@ -10,7 +10,7 @@ namespace db {
     constexpr uint32_t COLUMN_USERNAME_SIZE = 32;
     constexpr uint32_t COLUMN_EMAIL_SIZE = 255;
 
-    class row {
+    class Row {
     public:
         int id = 0;
         std::array<char, COLUMN_USERNAME_SIZE + 1> username{};
@@ -23,7 +23,7 @@ namespace db {
             return ROW_SIZE;
         }
 
-        friend std::ostream& operator<<(std::ostream& os, const row& row);
+        friend std::ostream& operator<<(std::ostream& os, const Row& row);
     private:
         static constexpr uint32_t ID_SIZE = sizeof(id);
         static constexpr uint32_t USERNAME_SIZE = sizeof(username);

@@ -5,13 +5,13 @@ enum class BPlusTreeNodeType {
     NODE_INTERNAL,
     NODE_LEAF
 };
-class bplustree {
+class BPlusTree {
     struct Node {
 
     };
 
 public:
-    bplustree();
+    BPlusTree();
 };
 
 #endif //DATABASE_ENGINE_FROM_SCRATCH_BPLUSTREE_H

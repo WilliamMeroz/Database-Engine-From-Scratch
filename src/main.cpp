@@ -4,7 +4,7 @@
 
 #include "../include/storage/cursor.h"
 #include "../include/repl/InputBuffer.h"
-#include "../include/model/statement.h"
+#include "../include/model/Statement.h"
 #include "../include/storage/table.h"
 
 namespace {
@@ -37,7 +37,7 @@ namespace {
         }
     }
 
-    MetaCommandResult do_meta_command(const InputBuffer* input_buffer, const db::table* table) {
+    MetaCommandResult do_meta_command(const InputBuffer* input_buffer, const db::Table* table) {
         if (input_buffer->buffer == ".exit") {
             table->db_close();
             exit(EXIT_SUCCESS);
@@ -46,7 +46,7 @@ namespace {
         return META_COMMAND_UNRECOGNIZED_COMMAND;
     }
 
-    PrepareResult prepare_statement(InputBuffer* input_buffer, statement* statement) {
+    PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
         std::istringstream ss(input_buffer->buffer);
         std::string keyword;
         ss >> keyword;
@@ -84,13 +84,13 @@ namespace {
         return PREPARE_UNRECOGNIZED_STATEMENT;
     }
 
-    ExecuteResult execute_insert(statement* statement, db::table* table) {
-        if (table->num_rows >= db::table::getTableMaxRows()) {
+    ExecuteResult execute_insert(Statement* statement, db::Table* table) {
+        if (table->num_rows >= db::Table::getTableMaxRows()) {
             return EXECUTE_TABLE_FULL;
         }
 
-        db::row* row_to_insert = &(statement->row_to_insert);
-        db::cursor cursor(table, true);
+        db::Row* row_to_insert = &(statement->row_to_insert);
+        db::Cursor cursor(table, true);
         row_to_insert->serialize_row(cursor.value());
 
         table->num_rows++;
@@ -98,9 +98,9 @@ namespace {
         return EXECUTE_SUCCESS;
     }
 
-    ExecuteResult execute_select(statement* statement, db::table* table) {
-        db::row row;
-        db::cursor cursor(table);
+    ExecuteResult execute_select(Statement* statement, db::Table* table) {
+        db::Row row;
+        db::Cursor cursor(table);
         while (!cursor.at_end()) {
             row.deserialize_row(cursor.value());
             std::cout << row << std::endl;
@@ -110,7 +110,7 @@ namespace {
         return EXECUTE_SUCCESS;
     }
 
-    ExecuteResult execute_statement(statement* statement, db::table* table) {
+    ExecuteResult execute_statement(Statement* statement, db::Table* table) {
         switch (statement->type) {
             case StatementType::STATEMENT_INSERT:
                 return execute_insert(statement, table);
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
     char* db_name = argv[1];
-    db::table table(db_name);
+    db::Table table(db_name);
     InputBuffer input;
     while (true) {
         print_prompt();
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        statement statement;
+        Statement statement;
         switch (prepare_statement(&input, &statement)) {
             case PREPARE_SUCCESS: break;
             case PREPARE_SYNTAX_ERROR:

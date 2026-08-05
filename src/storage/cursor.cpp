@@ -1,18 +1,18 @@
 #include "../../include/storage/cursor.h"
 
 namespace db {
-    cursor::cursor(Table* table) {
+    Cursor::Cursor(Table* table) {
         this->table = table;
         end_of_table = table->num_rows == 0;
     }
 
-    cursor::cursor(Table *table, const bool end_of_table) {
+    Cursor::Cursor(Table *table, const bool end_of_table) {
         this->table = table;
         row_num = table->num_rows;
         this->end_of_table = end_of_table;
     }
 
-    char *cursor::value() {
+    char *Cursor::value() {
         const int page_num = row_num / ROWS_PER_PAGE;
         char *page = table->get_page(page_num);
         int row_offset = row_num % ROWS_PER_PAGE;
@@ -20,14 +20,14 @@ namespace db {
         return page + byte_offset;
     }
 
-    void cursor::advance() {
+    void Cursor::advance() {
         row_num++;
         if (row_num >= table->num_rows) {
             end_of_table = true;
         }
     }
 
-    bool cursor::at_end() const {
+    bool Cursor::at_end() const {
         return end_of_table;
     }
 }

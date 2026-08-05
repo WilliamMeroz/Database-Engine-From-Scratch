@@ -6,20 +6,20 @@
 #define DATABASE_ENGINE_FROM_SCRATCH_TABLE_H
 
 #include "pager.h"
-#include "../model/row.h"
+#include "../model/Row.h"
 // Table that points to specific rows in specific pages.
 
 namespace db {
-    class table {
+    class Table {
         static constexpr int PAGE_SIZE = 4096;
         static constexpr int TABLE_MAX_PAGES = 100;
-        static constexpr int ROWS_PER_PAGE = PAGE_SIZE / db::row::get_row_size();
+        static constexpr int ROWS_PER_PAGE = PAGE_SIZE / db::Row::get_row_size();
         static constexpr int TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
-        std::unique_ptr<pager> pager;
+        std::unique_ptr<Pager> pager;
 
     public:
-        explicit table(std::string filename);
+        explicit Table(std::string filename);
         unsigned int num_rows = 0;
 
         char* row_slot(int row_number);
