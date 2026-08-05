@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <cassert>
+
+#include "../include/Cursor.h"
 #include "../include/InputBuffer.h"
 #include "../include/Statement.h"
 #include "../include/Table.h"
@@ -35,7 +37,7 @@ namespace {
         }
     }
 
-    MetaCommandResult do_meta_command(const InputBuffer* input_buffer, const Table* table) {
+    MetaCommandResult do_meta_command(const InputBuffer* input_buffer, const db::Table* table) {
         if (input_buffer->buffer == ".exit") {
             table->db_close();
             exit(EXIT_SUCCESS);
@@ -82,29 +84,33 @@ namespace {
         return PREPARE_UNRECOGNIZED_STATEMENT;
     }
 
-    ExecuteResult execute_insert(Statement* statement, Table* table) {
-        if (table->num_rows >= Table::getTableMaxRows()) {
+    ExecuteResult execute_insert(Statement* statement, db::Table* table) {
+        if (table->num_rows >= db::Table::getTableMaxRows()) {
             return EXECUTE_TABLE_FULL;
         }
 
         db::Row* row_to_insert = &(statement->row_to_insert);
-        row_to_insert->serialize_row(table->row_slot(table->num_rows));
+        db::Cursor cursor(table, true);
+        row_to_insert->serialize_row(cursor.value());
+
         table->num_rows++;
 
         return EXECUTE_SUCCESS;
     }
 
-    ExecuteResult execute_select(Statement* statement, Table* table) {
+    ExecuteResult execute_select(Statement* statement, db::Table* table) {
         db::Row row;
-        for (int i = 0; i < table->num_rows; i++) {
-            row.deserialize_row(table->row_slot(i));
+        db::Cursor cursor(table);
+        while (!cursor.at_end()) {
+            row.deserialize_row(cursor.value());
             std::cout << row << std::endl;
+            cursor.advance();
         }
 
         return EXECUTE_SUCCESS;
     }
 
-    ExecuteResult execute_statement(Statement* statement, Table* table) {
+    ExecuteResult execute_statement(Statement* statement, db::Table* table) {
         switch (statement->type) {
             case StatementType::STATEMENT_INSERT:
                 return execute_insert(statement, table);
@@ -122,7 +128,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
     char* db_name = argv[1];
-    Table table(db_name);
+    db::Table table(db_name);
     InputBuffer input;
     while (true) {
         print_prompt();
